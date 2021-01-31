@@ -4,22 +4,40 @@ public class Main{
 
     public static void main(String[] args){
 
-        Miembro abuelo = new Miembro (0, "Richard", null,'H');
-        Miembro padre = new Miembro (1, "Jacek", abuelo, 'H');
-        Miembro tia = new Miembro (2, "Monika", abuelo, 'M');
-        Miembro hijo = new Miembro (3, "Maciej", padre, 'H');
-        abuelo.addHijo(padre);
-        abuelo.addHijo(tia);
-        padre.addHijo(hijo);
+        String nombre;
+        String fecha;
+        Miembro padre;
+
+
+        //arbol de prueba
+        Miembro m0 = new Miembro (0, "Ricardo", null,'H', "12-01-1945");
+        Miembro m1 = new Miembro (1, "Jaime", m0, 'H', "23-07-1969");
+        Miembro m2 = new Miembro (2, "Monica", m0, 'M', "16-08-1978");
+        Miembro m3 = new Miembro (3, "Matias", m1, 'H', "01-12-1988");
+        m0.addHijo(m1);
+        m0.addHijo(m2);
+        m1.addHijo(m3);
 
         Arbol arbol = new Arbol();
 
-        arbol.addMiembro(abuelo);
-        arbol.addMiembro(padre);
-        arbol.addMiembro(tia);
-        arbol.addMiembro(hijo);
+        arbol.addMiembro(m0);
+        arbol.addMiembro(m1);
+        arbol.addMiembro(m2);
+        arbol.addMiembro(m3);
 
+        System.out.print("\n+--- Arbol Genealogico ---+\n" +
+                "Ejemplo: \n");
+        System.out.println();
         arbol.imprime();
+
+        System.out.println("\n\n[Introduzca los datos de los miembros de familia a visualizar,\n" +
+                "empiece por el miembro mas mayor que hara de raiz del arbol]");
+        System.out.println("Introduzca el nombre:");
+        nombre = Entrada.cadena();
+        System.out.println("Fecha de nacimiento (formato DD-MM-AAAA):");
+
+
+
 
     }
 
@@ -29,15 +47,17 @@ public class Main{
         Integer id;                 //cada miembro tendrá un unico id
         String nombre;
         Miembro padre;              //id del padre. Si vacío se trata del miembro raíz
-        char genero;                //H / M
+        char genero;                //H o M
+        String nacimiento;          //fecha de nacimento en formato DD-MM-AAAA
         ArrayList<Miembro> hijos = new ArrayList<Miembro>();    //lista de hijos
 
 
-        public Miembro(Integer id, String nombre, Miembro padre, char genero) {
+        public Miembro(Integer id, String nombre, Miembro padre, char genero, String nacimiento) {
             this.id = id;
             this.nombre = nombre;
             this.padre = padre;
             this.genero = genero;
+            this.nacimiento = nacimiento;
         }
 
         public Integer getId() {
@@ -76,9 +96,9 @@ public class Main{
         @Override
         public String toString(){
             if (padre!=null){ //si no se trata del miembro raiz:
-                return " " + nombre + " [" + genero + "]  Hijo/a de: " + padre.getNombre();
+                return nombre + " [Sexo: " + genero + "; Fecha de nacimiento: " + nacimiento + "; hijo/a de: " + padre.getNombre() + "]";
             }else{  //miembro raiz
-                return "" + nombre + " [" + genero + "]";
+                return nombre + " [Sexo: " + genero + "; Fecha de nacimiento: " + nacimiento + "]";
             }
 
         }
@@ -94,7 +114,7 @@ public class Main{
 
         public void imprime(){ //la primera llamada
             Miembro miembro = familia.get(0);
-            System.out.println("Generacion 0  " + miembro);
+            System.out.println(miembro);
             if(miembro.tieneHijos()){
                 gen++;
                 ArrayList<Miembro> hijos = miembro.getHijos();
@@ -106,7 +126,10 @@ public class Main{
 
         public void imprime(Miembro miembro){ //para llamadas recursivas, pasamos y analizamos los descendientes
 
-            System.out.println("Generacion: "+ gen + "  " + miembro);
+            for(int i=0; i<gen; i++){
+                System.out.print("---");
+            }
+            System.out.println(miembro);
             if(miembro.tieneHijos()){
                 gen++;
                 ArrayList<Miembro> hijos = miembro.getHijos();
